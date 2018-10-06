@@ -131,6 +131,18 @@ namespace BTCPayServer
 
         public string CryptoImagePath { get; set; }
         public string[] DefaultRateRules { get; internal set; } = Array.Empty<string>();
+        public TimeSpan? BlockTime { get; internal set; }
+
+        public TimeSpan GetTimeSpan(int blockCount)
+        {
+            return new TimeSpan(BlockTime.Value.Ticks * blockCount);
+        }
+
+        public int GetBlockCount(TimeSpan span)
+        {
+            return (int)Math.Round(((double)span.Ticks / BlockTime.Value.Ticks), MidpointRounding.ToEven);
+        }
+
         public override string ToString()
         {
             return CryptoCode;

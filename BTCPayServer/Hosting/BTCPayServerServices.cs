@@ -69,6 +69,8 @@ namespace BTCPayServer.Hosting
                 o.UseOpenIddict<BTCPayOpenIdClient, BTCPayOpenIdAuthorization, OpenIddictScope<string>, BTCPayOpenIdToken, string>();
             });
             services.AddHttpClient();
+            services.TryAddSingleton<AtomicSwapRepository>();
+            services.TryAddSingleton<AtomicSwapClientFactory>();
             services.AddHttpClient(nameof(ExplorerClientProvider), httpClient =>
             {
                 httpClient.Timeout = Timeout.InfiniteTimeSpan;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -17,6 +18,7 @@ using BTCPayServer.Services;
 using BTCPayServer.Services.Rates;
 using BTCPayServer.Services.Stores;
 using BTCPayServer.Services.Wallets;
+using BTCPayServer.Views.Wallets;
 using LedgerWallet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -40,8 +42,10 @@ namespace BTCPayServer.Controllers
     {
         public StoreRepository Repository { get; }
         public WalletRepository WalletRepository { get; }
+        public AtomicSwapRepository AtomicSwapRepository { get; }
         public BTCPayNetworkProvider NetworkProvider { get; }
         public ExplorerClientProvider ExplorerClientProvider { get; }
+        public AtomicSwapClientFactory AtomicSwapClientFactory { get; }
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JsonSerializerSettings _serializerSettings;
@@ -53,6 +57,7 @@ namespace BTCPayServer.Controllers
 
         CurrencyNameTable _currencyTable;
         public WalletsController(StoreRepository repo,
+                                 AtomicSwapRepository atomicSwapRepository,
                                  WalletRepository walletRepository,
                                  CurrencyNameTable currencyTable,
                                  BTCPayNetworkProvider networkProvider,
@@ -63,7 +68,8 @@ namespace BTCPayServer.Controllers
                                  IAuthorizationService authorizationService,
                                  ExplorerClientProvider explorerProvider,
                                  IFeeProviderFactory feeRateProvider,
-                                 BTCPayWalletProvider walletProvider)
+                                 BTCPayWalletProvider walletProvider,
+                                 AtomicSwapClientFactory atomicSwapClientFactory)
         {
             _currencyTable = currencyTable;
             Repository = repo;
@@ -77,6 +83,8 @@ namespace BTCPayServer.Controllers
             ExplorerClientProvider = explorerProvider;
             _feeRateProvider = feeRateProvider;
             _walletProvider = walletProvider;
+            AtomicSwapClientFactory = atomicSwapClientFactory;
+            AtomicSwapRepository = atomicSwapRepository;
         }
 
         // Borrowed from https://github.com/ManageIQ/guides/blob/master/labels.md
