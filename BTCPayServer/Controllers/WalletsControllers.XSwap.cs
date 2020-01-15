@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BTCPayServer.AtomicSwaps;
 using BTCPayServer.Data;
@@ -67,7 +68,7 @@ namespace BTCPayServer.Controllers
             var stores = await Repository.GetStoresByUserId(GetUserId());
             return stores
                     .SelectMany(s => s.GetSupportedPaymentMethods(NetworkProvider)
-                                    .OfType<DerivationStrategy>()
+                                    .OfType<DerivationSchemeSettings>()
                                      .Where(p => p.Network.BlockTime != null)
                                      .Where(p => p != null && ExplorerClientProvider.IsAvailable(p.Network))
                                      .Select(p => new NamedWallet()
@@ -152,7 +153,7 @@ namespace BTCPayServer.Controllers
                 if (RateRules.TryParse(newVM.RateRule, out var rules, out var rateRulesErrors))
                 {
                     rules.Spread = (decimal)newVM.Spread / 100.0m;
-                    var rateResult = await RateFetcher.FetchRate(pair, rules);
+                    var rateResult = await RateFetcher.FetchRate(pair, rules, CancellationToken.None);
                     if (rateResult.BidAsk == null)
                     {
                         string errorMessage = "Error when fetching rate";
@@ -209,10 +210,10 @@ namespace BTCPayServer.Controllers
             return RedirectToAction(nameof(AtomicSwapDetails), new { offerId = id, walletId = walletId.ToString() });
         }
 
-        private async Task<Script> GetDestination(DerivationStrategy derivationStrategy)
+        private async Task<Script> GetDestination(DerivationSchemeSettings derivationStrategy)
         {
             var explorer = this.ExplorerClientProvider.GetExplorerClient(derivationStrategy.PaymentId.CryptoCode);
-            var scriptPubKey = (await explorer.GetUnusedAsync(derivationStrategy.DerivationStrategyBase, NBXplorer.DerivationStrategy.DerivationFeature.Deposit, reserve: true)).ScriptPubKey;
+            var scriptPubKey = (await explorer.GetUnusedAsync(derivationStrategy.AccountDerivation, NBXplorer.DerivationStrategy.DerivationFeature.Deposit, reserve: true)).ScriptPubKey;
             return scriptPubKey;
         }
 
@@ -260,7 +261,7 @@ namespace BTCPayServer.Controllers
             }
             else if (offer.Status == XSwapStatus.WaitingEscrow)
             {
-                var network = NetworkProvider.GetNetwork(offer.Sent.CryptoCode);
+                var network = NetworkProvider.GetNetwork<BTCPayNetwork>(offer.Sent.CryptoCode);
                 var vm = new AtomicSwapEscrowViewModel()
                 {
                     ToSend = FormatAmount(offer.Sent),
@@ -381,13 +382,13 @@ namespace BTCPayServer.Controllers
             return RedirectToAction(nameof(AtomicSwapDetails), new { offerId = offerId, walletId = walletId.ToString() });
         }
 
-        async Task<DerivationStrategy> GetDerivationStrategy(WalletId walletId)
+        async Task<DerivationSchemeSettings> GetDerivationStrategy(WalletId walletId)
         {
             if (walletId?.StoreId == null || GetUserId() == null)
                 return null;
             var storeData = await this.Repository.FindStore(walletId.StoreId, GetUserId());
             var strategy = storeData.GetSupportedPaymentMethods(NetworkProvider)
-                     .OfType<DerivationStrategy>()
+                     .OfType<DerivationSchemeSettings>()
                      .FirstOrDefault(s => s.PaymentId.CryptoCode == walletId.CryptoCode);
             if (strategy == null || !ExplorerClientProvider.IsAvailable(strategy.Network))
                 return null;

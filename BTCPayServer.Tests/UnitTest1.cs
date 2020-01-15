@@ -60,6 +60,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NBXplorer.DerivationStrategy;
 using BTCPayServer.U2F.Models;
 using BTCPayServer.Security.Bitpay;
+using BTCPayServer.Views.Wallets;
 using MemoryCache = Microsoft.Extensions.Caching.Memory.MemoryCache;
 
 namespace BTCPayServer.Tests
@@ -1489,11 +1490,11 @@ namespace BTCPayServer.Tests
         }
 
         [Fact]
-        public void CanSwapCurrencies()
+        public async Task CanSwapCurrencies()
         {
             using (var tester = ServerTester.Create())
             {
-                tester.Start();
+                await tester.StartAsync();
                 var user = tester.NewAccount();
                 user.GrantAccess();
                 var userBTCWallet = user.RegisterDerivationScheme("BTC");

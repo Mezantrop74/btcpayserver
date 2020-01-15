@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -10,10 +9,8 @@ using BTCPayServer.Models.StoreViewModels;
 using BTCPayServer.Payments.Changelly;
 using BTCPayServer.Payments.Changelly.Models;
 using BTCPayServer.Services.Rates;
-using BTCPayServer.Services.Stores;
 using BTCPayServer.Tests.Logging;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 

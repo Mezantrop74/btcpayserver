@@ -32,6 +32,7 @@ namespace BTCPayServer
                 DefaultSettings = BTCPayDefaultSettings.GetDefaultSettings(NetworkType),
                 CoinType = NetworkType == NetworkType.Mainnet ? new KeyPath("1776'") : new KeyPath("1'"),
                 SupportRBF = true,
+                BlockTime = TimeSpan.FromMinutes(1),
                 //https://github.com/spesmilo/electrum/blob/11733d6bc271646a00b69ff07657119598874da4/electrum/constants.py
                 ElectrumMapping = NetworkType == NetworkType.Mainnet
                     ? new Dictionary<uint, DerivationType>()

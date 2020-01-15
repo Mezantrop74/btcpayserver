@@ -1,26 +1,18 @@
 using System;
-using BTCPayServer;
 using System.Linq;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text;
 using NBitcoin;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Xunit;
 using System.IO;
-using System.Net.Http;
-using System.Reflection;
 using BTCPayServer.Tests.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 using BTCPayServer.Lightning;
 using BTCPayServer.Lightning.CLightning;
 using BTCPayServer.Views.Stores;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.Interactions;
 
 namespace BTCPayServer.Tests

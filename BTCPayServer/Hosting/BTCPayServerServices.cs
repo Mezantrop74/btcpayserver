@@ -53,6 +53,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using BTCPayServer.Security.Bitpay;
+using BTCPayServer.Views.Wallets;
 using Serilog;
 
 namespace BTCPayServer.Hosting

@@ -15,7 +15,7 @@ namespace BTCPayServer.Views.Wallets
         public WalletId WalletId { get; set; }
         public Rating.RateRule Rule { get; set; }
         public decimal Spread { get; set; }
-        public DerivationStrategy DerivationStrategy { get; set; }
+        public DerivationSchemeSettings DerivationStrategy { get; set; }
     }
     public class NewViewModel
     {
