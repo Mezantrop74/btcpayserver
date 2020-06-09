@@ -1764,7 +1764,7 @@ namespace BTCPayServer.Tests
 
                 Assert.Single(invoice.CryptoInfo); // Only BTC should be presented
 
-                var controller = tester.PayTester.GetController<InvoiceController>(null);
+                var controller = tester.PayTester.GetController<CheckoutController>(null);
                 var checkout =
                     (Models.InvoicingModels.PaymentModel)((JsonResult)controller.GetStatus(invoice.Id, null)
                         .GetAwaiter().GetResult()).Value;
@@ -1894,7 +1894,7 @@ namespace BTCPayServer.Tests
 
                 Assert.Single(invoice.CryptoInfo); // Only BTC should be presented
 
-                var controller = tester.PayTester.GetController<InvoiceController>(null);
+                var controller = tester.PayTester.GetController<CheckoutController>(null);
                 var checkout =
                     (Models.InvoicingModels.PaymentModel)((JsonResult)controller.GetStatus(invoice.Id, null)
                         .GetAwaiter().GetResult()).Value;
@@ -1956,7 +1956,7 @@ namespace BTCPayServer.Tests
                     Assert.False((bool)((JValue)invoice.ExceptionStatus).Value);
                 });
 
-                controller = tester.PayTester.GetController<InvoiceController>(null);
+                controller = tester.PayTester.GetController<CheckoutController>(null);
                 checkout = (Models.InvoicingModels.PaymentModel)((JsonResult)controller.GetStatus(invoice.Id, "LTC")
                     .GetAwaiter().GetResult()).Value;
                 Assert.Equal(2, checkout.AvailableCryptos.Count);
@@ -2448,7 +2448,7 @@ donation:
                 // testing custom amount
                 var action = Assert.IsType<RedirectToActionResult>(publicApps
                     .ViewPointOfSale(appId, PosViewType.Cart, 6.6m, null, null, null, null, "donation").Result);
-                Assert.Equal(nameof(InvoiceController.Checkout), action.ActionName);
+                Assert.Equal(nameof(CheckoutController.Checkout), action.ActionName);
                 invoices = user.BitPay.GetInvoices();
                 var donationInvoice = invoices.Single(i => i.Price == 6.6m);
                 Assert.NotNull(donationInvoice);

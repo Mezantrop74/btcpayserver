@@ -196,7 +196,7 @@ namespace BTCPayServer.Controllers
                 }, store, HttpContext.Request.GetAbsoluteRoot(),
                     new List<string>() { AppService.GetAppInternalTag(appId) },
                     cancellationToken);
-                return RedirectToAction(nameof(InvoiceController.Checkout), "Invoice", new { invoiceId = invoice.Data.Id });
+                return RedirectToAction(nameof(CheckoutController.Checkout), "Invoice", new { invoiceId = invoice.Data.Id });
             }
             catch (BitpayHttpException e)
             {
@@ -338,7 +338,7 @@ namespace BTCPayServer.Controllers
                     cancellationToken: cancellationToken);
                 if (request.RedirectToCheckout)
                 {
-                    return RedirectToAction(nameof(InvoiceController.Checkout), "Invoice",
+                    return RedirectToAction(nameof(CheckoutController.Checkout), "Invoice",
                         new { invoiceId = invoice.Data.Id });
                 }
                 else

@@ -38,6 +38,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json.Linq;
 using BTCPayServer.Payments.Bitcoin;
+using BTCPayServer.Services.Rates;
 
 namespace BTCPayServer
 {
@@ -465,6 +466,11 @@ namespace BTCPayServer
                 return input.Substring(0, input.Length - suffixToRemove.Length);
             }
             else return input;
+        }
+        public static string ExchangeRate(this CurrencyNameTable currencyNameTable, PaymentMethod paymentMethod)
+        {
+            string currency = paymentMethod.ParentEntity.ProductInformation.Currency;
+            return currencyNameTable.DisplayFormatCurrency(paymentMethod.Rate, currency);
         }
     }
 }

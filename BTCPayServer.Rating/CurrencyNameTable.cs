@@ -19,6 +19,7 @@ namespace BTCPayServer.Services.Rates
         public string Symbol { get; set; }
         public bool Crypto { get; set; }
     }
+
     public class CurrencyNameTable
     {
         public static CurrencyNameTable Instance = new CurrencyNameTable();
@@ -28,6 +29,7 @@ namespace BTCPayServer.Services.Rates
         }
 
         static Dictionary<string, IFormatProvider> _CurrencyProviders = new Dictionary<string, IFormatProvider>();
+
 
         public string FormatCurrency(string price, string currency)
         {
